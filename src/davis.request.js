@@ -13,11 +13,11 @@
  * for rails style nested form params.
  *
  * By default the request method will be taken from the method attribute for forms or will be defaulted
- * to 'get' for links, however there is support for using a hidden field called _method in your forms
+ * to 'get' for links. However there is support for using a hidden field called _method in your forms
  * to set the correct reqeust method.
  *
  * @constructor
- * @param {Object} raw An object that at least contains a title, fullPath and method proprty.
+ * @param {Object} raw An object that contains at least a title, fullPath and method property.
  *
  * ### Example:
  *     var request = new Davis.Request({
@@ -59,13 +59,13 @@ Davis.Request = function (raw) {
 /**
  * ## request.redirect
  * Redirects the current request to a new location.  Calling redirect on an instance of
- * Davis.Request will create a new request using the path and title of the current request.
- * Redirected requests always have a method of 'get'
+ * Davis.Request will create a new request using the same path and title. Redirected requests
+ * always have a method of 'get'.
  *
  * The request created will replace the current request in the history stack.  Redirect is most
- * often useful inside a handler for a form submit.  After succesfully handling the form the app
+ * often useful inside a handler for a form submit.  After succesfully handling the form, the app
  * can redirect to another path.  This means that the current form will not be re-submitted if
- * navigating through the history with the back or forward buttons because the request that the
+ * navigation through the history is with the back or forward buttons because the request that the
  * submit generated has been replaced in the history stack.
  *
  * @param {String} path The path to redirect the current request to
@@ -97,10 +97,11 @@ Davis.Request.prototype.toString = function () {
 
 /**
  * ## Davis.Request.forPageLoad
- * Creates a new request for the page on page load.
- * This is required because usually requests are generated from clicking links or submitting forms
- * however this doesn't happen on a page load but should still be considered a request that the 
- * JavaScript app should handle.
+ * Creates a new request for the page on load.
+ * This is required as requests don't occur on a page load, they are usually
+ * generated from clicking links or submitting forms.
+ * However the page load should still be considered as a request for the
+ * JavaScript app to handle.
  *
  * @returns {Davis.Request} A request representing the current page loading.
  */

@@ -5,11 +5,11 @@
  */
 
 /**
- * A decorator that adds convinience methods to a Davis.App for easily creating instances
- * of Davis.Route and looking up routes for a particular request.
+ * A decorator that adds convinience methods to a Davis.App to easily create instances
+ * of Davis.Route and look up routes for a particular request.
  *
- * Provides get, post put and delete method shortcuts for creating instances of Davis.Routes
- * with the corresponding method.  This allows simple REST styled routing for a client side
+ * Provides get, post, put and delete method shortcuts for creating instances of Davis.Routes
+ * with the corresponding verb.  This allows simple REST styled routing for a client side
  * JavaScript application.
  *
  * ### Example
@@ -30,12 +30,13 @@
  *       // delete the instance of foo with id = req.params['id']
  *     })
  *
- * As well as providing convinience methods for creating instances of Davis.Routes the router
- * also provides methods for creating special instances of routes called filters.  Before filters
- * run before any matching route is run, and after filters run after any matched route has run.
+ * As well as providing convinience methods for creating instances of Davis.Routes, the router
+ * also provides methods for creating special instances of routes called filters.  
+ * Before filter will run before the route for the current request and after filters run after 
+ * any matched route has run.
  * A before filter can return false to halt the running of any matched routes or other before filters.
  *
- * A filter can take an optional path to match on, or without a path will match every request.
+ * A filter can take an optional path to match on, or without any path will match every request.
  *
  * ### Example
  *

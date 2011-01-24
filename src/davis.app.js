@@ -34,7 +34,7 @@ Davis.App = (function () {
 
     /**
      * ## app.configure
-     * A convinience function for changing the apps default settings.
+     * A convinience function for changing the app's default settings.
      * Should be used before starting the app to ensure any new settings
      * are picked up and used.
      *
@@ -72,12 +72,12 @@ Davis.App = (function () {
 
     /**
      * ## app.start
-     * Once the app's routes have been defined and any additional configuration has happened the 
+     * Once the app's routes have been defined, and any additional configuration has been completed, the 
      * start method should be called.
      *
      * Starting the app binds all links and forms, so clicks and submits
      * create Davis requests that will be pushed onto the browsers history stack.  Browser history change
-     * events will be picked up and the request that caused the change will be matched against the apps
+     * events will be picked up and the request that caused the change will be matched against the app's
      * routes and filters.
      */
     start: function () {
@@ -131,8 +131,8 @@ Davis.App = (function () {
 
     /**
      * ## app.stop
-     * Stops the app listening to clicks and submits on all forms and links found using the current
-     * apps settings.
+     * Stops the app listening to clicks and submits on all links and forms found using the current
+     * app's settings.
      */
     stop: function () {
       this.unlisten();
