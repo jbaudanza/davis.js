@@ -40,8 +40,8 @@ Davis.history = (function () {
 
   /**
    * returns a handler that wraps the native event given onpopstate.
-   * When the page first loads or going back to a time in the history that was not added
-   * by pushState the event.state object will be null.  This generates a request for the current
+   * When the page first loads or goes back to a time in the history that was not added
+   * by pushState, the event.state object will be null.  This generates a request for the current
    * location in those cases
    *
    * @param {Function} handler
@@ -60,7 +60,7 @@ Davis.history = (function () {
   /**
    * ## Davis.history.onChange
    * Bind to the history on change event.  This is not a native event but is fired any time a new
-   * state is pushed onto the history stack, the current history is replaced or a state is popped
+   * state is pushed onto the history stack. The current history is then replaced or a state is popped
    * off the history stack.
    *
    * @param {Function} handler
@@ -76,7 +76,7 @@ Davis.history = (function () {
   /**
    * ## Davis.history.pushState
    * Push a request onto the history stack.  This is used internally by Davis to push a new request
-   * resulting from either a form submit or a link click onto the history stack, it will also trigger
+   * resulting from either a form submit or a link click onto the history stack. It will also trigger
    * the onpushstate event.
    *
    * @param {Davis.Request} request

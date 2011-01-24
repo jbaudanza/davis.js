@@ -106,6 +106,20 @@ code .this { color: #19469D; }</style>
 				});
 			});
 		</script>
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-6178997-4']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
 	</head>
 	<body>
 <table id="source"><tbody><tr><td><h1>Davis</h1></td><td></td></tr><tr class="filename"><td><h2 id="src/davis.app.js"><a href="#">davis.app</a></h2></td><td>src/davis.app.js</td></tr><tr class="code">
@@ -128,7 +142,7 @@ code .this { color: #19469D; }</style>
 <td class="docs">
 <h2>app.configure</h2>
 
-<p>A convinience function for changing the apps default settings.
+<p>A convinience function for changing the app's default settings.
 Should be used before starting the app to ensure any new settings
 are picked up and used.</p>
 
@@ -180,12 +194,12 @@ Davis to respond to.  These links will not trigger a normal http request.</p>
 <td class="docs">
 <h2>app.start</h2>
 
-<p>Once the app's routes have been defined and any additional configuration has happened the 
+<p>Once the app's routes have been defined, and any additional configuration has been completed, the 
 start method should be called.</p>
 
 <p>Starting the app binds all links and forms, so clicks and submits
 create Davis requests that will be pushed onto the browsers history stack.  Browser history change
-events will be picked up and the request that caused the change will be matched against the apps
+events will be picked up and the request that caused the change will be matched against the app's
 routes and filters.
      </p>
 </td>
@@ -244,8 +258,8 @@ routes and filters.
 <td class="docs">
 <h2>app.stop</h2>
 
-<p>Stops the app listening to clicks and submits on all forms and links found using the current
-apps settings.
+<p>Stops the app listening to clicks and submits on all links and forms found using the current
+app's settings.
      </p>
 </td>
 <td class="code">
@@ -282,13 +296,13 @@ to the callback function as the first parameter.</p>
 
 <p> <strong>start</strong> : Triggered when the application is started</p>
 
-<p> <strong>lookupRoute</strong> : Triggered before looking up a route, the request being looked up is passed as an argument</p>
+<p> <strong>lookupRoute</strong> : Triggered before looking up a route. The request being looked up is passed as an argument</p>
 
-<p> <strong>runRoute</strong> : Triggered before running a route, the request and route being run are passed as arguments</p>
+<p> <strong>runRoute</strong> : Triggered before running a route. The request and route being run are passed as arguments</p>
 
-<p> <strong>routeNotFound</strong> : Triggered if no route for the current request can be found, the current request is passed as an arugment</p>
+<p> <strong>routeNotFound</strong> : Triggered if no route for the current request can be found. The current request is passed as an arugment</p>
 
-<p> <strong>requestHalted</strong> : Triggered when a before filter halts the current request, the current request is passed as an argument</p>
+<p> <strong>requestHalted</strong> : Triggered when a before filter halts the current request. The current request is passed as an argument</p>
 
 <h3>Example:</h3>
 
@@ -316,7 +330,7 @@ to the callback function as the first parameter.</p>
 
 <ul><li><p><strong>param</strong>: <em>String</em>  eventName</p></li><li><p><strong>param</strong>: <em>Object</em>  data (optional)</p></li></ul>
 
-<p>Triggers an event on the current object, all callbacks bound using bind will be called.
+<p>Triggers an event on the current object: all callbacks bound using bind will be called.
 An optional second param can be passed which will be passed as an argument to each callback
 bound to the named event.</p>
 
@@ -356,7 +370,7 @@ both of these events into an onChange event.
 <h2>Davis.history.onChange</h2>
 
 <p>Bind to the history on change event.  This is not a native event but is fired any time a new
-state is pushed onto the history stack, the current history is replaced or a state is popped
+state is pushed onto the history stack. The current history is then replaced or a state is popped
 off the history stack.</p>
 
 <h2></h2>
@@ -380,7 +394,7 @@ off the history stack.</p>
 <h2>Davis.history.pushState</h2>
 
 <p>Push a request onto the history stack.  This is used internally by Davis to push a new request
-resulting from either a form submit or a link click onto the history stack, it will also trigger
+resulting from either a form submit or a link click onto the history stack. It will also trigger
 the onpushstate event.</p>
 
 <h2></h2>
@@ -425,12 +439,12 @@ and a path property will also be accepted.
 </td>
 </tr><tr class="filename"><td><h2 id="src/davis.listener.js"><a href="#">davis.listener</a></h2></td><td>src/davis.listener.js</td></tr><tr class="code">
 <td class="docs">
-<p>A module to bind to link clicks and form submits and turn what would normally be http requests
+<p>A module to bind to link clicks and form submits, and to turn what would normally be http requests
 into instances of Davis.Request.  These request objects are then pushed onto the history stack
 using the Davis.history module.</p>
 
 <p>This module requires jQuery for its event binding and event object normalization.  To use Davis
-with any, or no, JavaScript framework this module should be replaced with one using your framework
+with any JavaScript framework, this module should be replaced with one using your framework
 of choice.
  </p>
 </td>
@@ -442,8 +456,8 @@ of choice.
 <td class="docs">
 <h2>app.listen</h2>
 
-<p>Binds to both link clicks and form submits using jQuery's deleagate.  Will catch all current
-and future links and forms.  Uses the apps settings for the selector to use for links and forms</p>
+<p>Binds to both link clicks and form submits using jQuery's delegate.  Will catch all current
+and future links and forms.  Uses the app's settings for the selector to use for links and forms</p>
 
 <ul><li><strong>see</strong>: <em>Davis</em>
 .App.settings</li></ul>
@@ -543,14 +557,14 @@ params in a routes path will also be added to the requests params object.  Also 
 for rails style nested form params.</p>
 
 <p>By default the request method will be taken from the method attribute for forms or will be defaulted
-to 'get' for links, however there is support for using a hidden field called _method in your forms
+to 'get' for links. However there is support for using a hidden field called _method in your forms
 to set the correct reqeust method.</p>
 
 <ul><li><strong>constructo</strong>: <em>r</em></li></ul>
 
 <h2></h2>
 
-<ul><li><strong>param</strong>: <em>Object</em>  raw An object that at least contains a title, fullPath and method proprty.</li></ul>
+<ul><li><strong>param</strong>: <em>Object</em>  raw An object that contains at least a title, fullPath and method property.</li></ul>
 
 <h3>Example:</h3>
 
@@ -599,13 +613,13 @@ to set the correct reqeust method.</p>
 <h2>request.redirect</h2>
 
 <p>Redirects the current request to a new location.  Calling redirect on an instance of
-Davis.Request will create a new request using the path and title of the current request.
-Redirected requests always have a method of 'get'</p>
+Davis.Request will create a new request using the same path and title. Redirected requests
+always have a method of 'get'.</p>
 
 <p>The request created will replace the current request in the history stack.  Redirect is most
-often useful inside a handler for a form submit.  After succesfully handling the form the app
+often useful inside a handler for a form submit.  After succesfully handling the form, the app
 can redirect to another path.  This means that the current form will not be re-submitted if
-navigating through the history with the back or forward buttons because the request that the
+navigation through the history is with the back or forward buttons because the request that the
 submit generated has been replaced in the history stack.</p>
 
 <h2></h2>
@@ -652,10 +666,11 @@ attributes.</p>
 <td class="docs">
 <h2>Davis.Request.forPageLoad</h2>
 
-<p>Creates a new request for the page on page load.
-This is required because usually requests are generated from clicking links or submitting forms
-however this doesn't happen on a page load but should still be considered a request that the 
-JavaScript app should handle.</p>
+<p>Creates a new request for the page on load.
+This is required as requests don't occur on a page load, they are usually
+generated from clicking links or submitting forms.
+However the page load should still be considered as a request for the
+JavaScript app to handle.</p>
 
 <h2></h2>
 
@@ -672,7 +687,7 @@ JavaScript app should handle.</p>
 </td>
 </tr><tr class="filename"><td><h2 id="src/davis.route.js"><a href="#">davis.route</a></h2></td><td>src/davis.route.js</td></tr><tr class="code">
 <td class="docs">
-<p>Davis.Routes are the main part of a Davis application.  They consist of a HTTP method, a path
+<p>Davis.Routes are the main part of a Davis application.  They consist of an HTTP method, a path
 and a callback function.  When a link or a form that Davis has bound to are clicked or submitted
 a request is pushed on the history stack and a route that matches the path and method of the
 generated request is run.</p>
@@ -731,7 +746,7 @@ generated request is run.</p>
 <td class="docs">
 <h2>route.match</h2>
 
-<p>Tests whether or not a route matches a particular request.</p>
+<p>Tests whether a route matches a particular request.</p>
 
 <h2></h2>
 
@@ -799,11 +814,11 @@ attributes.</p>
 </td>
 </tr><tr class="filename"><td><h2 id="src/davis.router.js"><a href="#">davis.router</a></h2></td><td>src/davis.router.js</td></tr><tr class="code">
 <td class="docs">
-<p>A decorator that adds convinience methods to a Davis.App for easily creating instances
-of Davis.Route and looking up routes for a particular request.</p>
+<p>A decorator that adds convinience methods to a Davis.App to easily create instances
+of Davis.Route and look up routes for a particular request.</p>
 
-<p>Provides get, post put and delete method shortcuts for creating instances of Davis.Routes
-with the corresponding method.  This allows simple REST styled routing for a client side
+<p>Provides get, post, put and delete method shortcuts for creating instances of Davis.Routes
+with the corresponding verb.  This allows simple REST styled routing for a client side
 JavaScript application.</p>
 
 <h3>Example</h3>
@@ -824,12 +839,12 @@ app.delete('/foo/:id', function (req) {
   // delete the instance of foo with id = req.params['id']
 })</code></pre>
 
-<p>As well as providing convinience methods for creating instances of Davis.Routes the router
-also provides methods for creating special instances of routes called filters.  Before filters
-run before any matching route is run, and after filters run after any matched route has run.
+<p>As well as providing convinience methods for creating instances of Davis.Routes, the router
+also provides methods for creating special instances of routes called filters.<br></br>Before filter will run before the route for the current request and after filters run after 
+any matched route has run.
 A before filter can return false to halt the running of any matched routes or other before filters.</p>
 
-<p>A filter can take an optional path to match on, or without a path will match every request.</p>
+<p>A filter can take an optional path to match on, or without any path will match every request.</p>
 
 <h3>Example</h3>
 
@@ -923,17 +938,4 @@ find and return the first matched route.</p>
 }</code></pre>
 </td>
 </tr>	</body>
-<script type="text/javascript">
-
-  var _gaq = _gaq || [];
-  _gaq.push(['_setAccount', 'UA-6178997-4']);
-  _gaq.push(['_trackPageview']);
-
-  (function() {
-    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-  })();
-
-</script>
 </html></tbody></table>

@@ -5,12 +5,12 @@
  */
 
 /**
- * A module to bind to link clicks and form submits and turn what would normally be http requests
+ * A module to bind to link clicks and form submits, and to turn what would normally be http requests
  * into instances of Davis.Request.  These request objects are then pushed onto the history stack
  * using the Davis.history module.
  *
  * This module requires jQuery for its event binding and event object normalization.  To use Davis
- * with any, or no, JavaScript framework this module should be replaced with one using your framework
+ * with any JavaScript framework, this module should be replaced with one using your framework
  * of choice.
  */
 Davis.listener = (function () {
@@ -55,8 +55,8 @@ Davis.listener = (function () {
 
   /**
    * ## app.listen
-   * Binds to both link clicks and form submits using jQuery's deleagate.  Will catch all current
-   * and future links and forms.  Uses the apps settings for the selector to use for links and forms
+   * Binds to both link clicks and form submits using jQuery's delegate.  Will catch all current
+   * and future links and forms.  Uses the app's settings for the selector to use for links and forms
    * 
    * @see Davis.App.settings
    */

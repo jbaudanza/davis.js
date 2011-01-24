@@ -18,7 +18,7 @@ Davis.Route = (function () {
   var pathNameReplacement = "([^\/]+)";
 
 /**
- * Davis.Routes are the main part of a Davis application.  They consist of a HTTP method, a path
+ * Davis.Routes are the main part of a Davis application.  They consist of an HTTP method, a path
  * and a callback function.  When a link or a form that Davis has bound to are clicked or submitted
  * a request is pushed on the history stack and a route that matches the path and method of the
  * generated request is run.
@@ -69,7 +69,7 @@ Davis.Route = (function () {
 
     /**
      * ## route.match
-     * Tests whether or not a route matches a particular request.
+     * Tests whether a route matches a particular request.
      *
      * @param {String} method
      * @param {String} path
