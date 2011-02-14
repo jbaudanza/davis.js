@@ -31,6 +31,8 @@ Davis.Request = function (raw) {
   this.params = {};
   this.title = raw.title;
   this.queryString = raw.fullPath.split("?")[1];
+  this.type = 'request';
+  this._staleCallback = function () {};
 
   if (this.queryString) {
     this.queryString.split("&").forEach(function (keyval) {
@@ -54,6 +56,10 @@ Davis.Request = function (raw) {
 
   this.method = this.params._method || raw.method;
   this.path = raw.fullPath.replace(/\?.+$/, "");
+
+  if (Davis.Request.prev) Davis.Request.prev.makeStale();
+  Davis.Request.prev = this;
+
 };
 
 /**
@@ -85,6 +91,41 @@ Davis.Request.prototype.redirect = function (path) {
 };
 
 /**
+ * ## request.whenStale
+ * Adds a callback to be called when the request is stale.  A request becomes stale when it is no
+ * longer the current request, this normally occurs when a new request is triggered.  A request 
+ * can be marked as stale manually if required.
+ *
+ * Use the whenStale callback to 'teardown' the objects required for the current route, this gives
+ * a chance for views to hide themselves and unbind any event handlers etc.
+ *
+ * @param {Function} callback A single callback that will be called when the request becomes stale.
+ */
+Davis.Request.prototype.whenStale = function (callback) {
+  this._staleCallback = callback;
+}
+
+/**
+ * ## request.makeStale
+ * Mark the request as stale.  This will cause the whenStale callback to be called.
+ */
+Davis.Request.prototype.makeStale = function () {
+  this._staleCallback();
+}
+
+/**
+ * ## request.location
+ * Returns the location or path that should be pushed onto the history stack, for most requests this
+ * will be the same as the path, however there is a special kind of request, with a method of state,
+ * that should not have any location added to the history stack.
+ *
+ * @returns {String} string The location that the url bar should display and should be pushed onto the history stack for this request.
+ */
+Davis.Request.prototype.location = function () {
+  return (this.method === 'state') ? '' : this.path
+}
+
+/**
  * ## request.toString
  * Converts the request to a string representation of itself by combining the method and path
  * attributes.
@@ -112,3 +153,10 @@ Davis.Request.forPageLoad = function () {
     title: document.title
   });
 }
+
+/**
+ * ## Davis.Request.prev
+ * Stores the last request
+ * @private
+ */
+Davis.Request.prev = null

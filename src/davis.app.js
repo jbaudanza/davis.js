@@ -83,6 +83,11 @@ Davis.App = (function () {
     start: function () {
       var self = this;
 
+      if (!Davis.supported()) {
+        this.trigger('unsupported')
+        return
+      };
+
       var runFilterWith = function (request) {
         return function (filter) {
           var result = filter.run(request, request);
@@ -112,7 +117,9 @@ Davis.App = (function () {
         }
       }
 
-      Davis.history.onChange(handleRequest);
+      Davis.history.onChange(function (req) {
+        handleRequest(req)
+      });
 
       this
         .bind('runRoute', function (request) {
