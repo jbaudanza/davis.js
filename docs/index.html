@@ -106,19 +106,6 @@ code .this { color: #19469D; }</style>
 				});
 			});
 		</script>
-    <script type="text/javascript">
-
-      var _gaq = _gaq || [];
-      _gaq.push(['_setAccount', 'UA-6178997-4']);
-      _gaq.push(['_trackPageview']);
-
-      (function() {
-        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-      })();
-
-    </script>
 	</head>
 	<body>
 <table id="source"><tbody><tr><td><h1>Davis</h1></td><td></td></tr><tr class="filename"><td><h2 id="src/davis.app.js"><a href="#">davis.app</a></h2></td><td>src/davis.app.js</td></tr><tr class="code">
@@ -621,7 +608,7 @@ to set the correct reqeust method.</p>
   <span class="this">this</span>.<span class="variable">method</span> = <span class="this">this</span>.<span class="variable">params</span>.<span class="variable">_method</span> || <span class="variable">raw</span>.<span class="variable">method</span>;
   <span class="this">this</span>.<span class="variable">path</span> = <span class="variable">raw</span>.<span class="variable">fullPath</span>.<span class="variable">replace</span>(<span class="regexp">/\?.+$/</span>, &<span class="variable">quot</span>;&<span class="variable">quot</span>;);
 
-  <span class="keyword">if</span> (<span class="class">Davis</span>.<span class="class">Request</span>.<span class="variable">prev</span>) <span class="class">Davis</span>.<span class="class">Request</span>.<span class="variable">prev</span>.<span class="variable">makeStale</span>();
+  <span class="keyword">if</span> (<span class="class">Davis</span>.<span class="class">Request</span>.<span class="variable">prev</span>) <span class="class">Davis</span>.<span class="class">Request</span>.<span class="variable">prev</span>.<span class="variable">makeStale</span>(<span class="this">this</span>);
   <span class="class">Davis</span>.<span class="class">Request</span>.<span class="variable">prev</span> = <span class="this">this</span>;
 
 };</code></pre>
@@ -670,14 +657,27 @@ submit generated has been replaced in the history stack.</p>
 
 <p>Adds a callback to be called when the request is stale.  A request becomes stale when it is no
 longer the current request, this normally occurs when a new request is triggered.  A request 
-can be marked as stale manually if required.</p>
+can be marked as stale manually if required.  The callback passed to whenStale will be called
+with the new request that is making the current request stale.</p>
 
 <p>Use the whenStale callback to 'teardown' the objects required for the current route, this gives
 a chance for views to hide themselves and unbind any event handlers etc.</p>
 
 <h2></h2>
 
-<ul><li><p><strong>param</strong>: <em>Function</em>  callback A single callback that will be called when the request becomes stale.</p></li></ul>
+<ul><li><strong>param</strong>: <em>Function</em>  callback A single callback that will be called when the request becomes stale.</li></ul>
+
+<h3>Example:</h3>
+
+<pre><code>this.get('/foo', function (req) {
+  var fooView = new FooView ()
+  fooView.render() // display the foo view
+  req.whenStale(function (nextReq) {
+    fooView.remove() // stop displaying foo view and unbind any events
+  })
+})</code></pre>
+
+<p> </p>
 </td>
 <td class="code">
 <pre><code><span class="class">Davis</span>.<span class="class">Request</span>.<span class="variable">prototype</span>.<span class="variable">whenStale</span> = <span class="keyword">function</span> (<span class="variable">callback</span>) {
@@ -689,12 +689,15 @@ a chance for views to hide themselves and unbind any event handlers etc.</p>
 <td class="docs">
 <h2>request.makeStale</h2>
 
-<p>Mark the request as stale.  This will cause the whenStale callback to be called.
- </p>
+<p>Mark the request as stale.  This will cause the whenStale callback to be called.</p>
+
+<h2></h2>
+
+<ul><li><p><strong>param</strong>: <em>Davis.Request</em>  req The next request that has been recieved.</p></li></ul>
 </td>
 <td class="code">
-<pre><code><span class="class">Davis</span>.<span class="class">Request</span>.<span class="variable">prototype</span>.<span class="variable">makeStale</span> = <span class="keyword">function</span> () {
-  <span class="this">this</span>.<span class="variable">_staleCallback</span>();
+<pre><code><span class="class">Davis</span>.<span class="class">Request</span>.<span class="variable">prototype</span>.<span class="variable">makeStale</span> = <span class="keyword">function</span> (<span class="variable">req</span>) {
+  <span class="this">this</span>.<span class="variable">_staleCallback</span>.<span class="variable">call</span>(<span class="variable">req</span>, <span class="variable">req</span>);
 }</code></pre>
 </td>
 </tr>
