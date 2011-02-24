@@ -42,12 +42,40 @@ Davis.App = (function () {
      *
      * ### Example:
      *     app.configure(function () {
-     *       this.linkSelector: 'a.davis'
-     *       this.formSelector: 'form.davis'
+     *       this.linkSelector = 'a.davis'
+     *       this.formSelector = 'form.davis'
      *     })
      */
     configure: function (config) {
       config.call(this.settings);
+    },
+
+    /**
+     * ## app.use
+     * Method to include a plugin in this app.  A plugin is just a function that will be evaluated in the
+     * context of the app.
+     *
+     * @param {Function} plugin - The plugin to use
+     *
+     * ### Example:
+     *     app.use(Davis.title)
+     *
+     */
+    use: function (plugin) {
+      plugin.apply(this, Array.prototype.slice.call(arguments, 1))
+    },
+
+    /**
+     * ## app.helpers
+     * Method to add helper properties to all requests in the application.  Helpers will be added to the
+     * Davis.Request.prototype.  Care should be taken not to override any existing Davis.Request methods.
+     *
+     * @param {Object} helpers - An object containing helpers to mixin to the request
+     */
+    helpers: function (helpers) {
+      for (property in helpers) {
+        if (helpers.hasOwnProperty(property)) Davis.Request.prototype[property] = helpers[property]
+      }
     },
 
     /**
@@ -62,12 +90,18 @@ Davis.App = (function () {
      *
      * `logger` is the object that the app will use to log through.
      *
+     * `throwErrors` decides whether or not any errors will be caugth by Davis.  If this is set to true
+     * errors will be thrown so that the request will not be handled by JavaScript, the server will have
+     * to provide a response.  When set to false errors in a route will be caught and the server will not
+     * receive the request.
+     *
      * @see #configure
      */
     settings: {
       linkSelector: 'a',
       formSelector: 'form',
-      logger: Davis.logger
+      logger: Davis.logger,
+      throwErrors: true
     },
 
     /**
@@ -106,7 +140,16 @@ Davis.App = (function () {
           var route = self.lookupRoute(request.method, request.path);
           if (route) {
             self.trigger('runRoute', request, route);
-            route.run(request);
+
+            try {
+              route.run(request)
+              self.trigger('routeComplete', request, route)
+            } catch (error) {
+              self.trigger('routeError', request, route, error)
+              self.settings.logger.error(error.message, error.stack)
+              if (self.settings.throwErrors) throw(error)
+            }
+
             self.lookupAfterFilter(request.method, request.path)
                   .every(runFilterWith(request));
           } else {
@@ -148,6 +191,7 @@ Davis.App = (function () {
     stop: function () {
       this.unlisten();
       this.trigger('stop')
+      this.running = false
     }
 
   /**

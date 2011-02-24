@@ -1,13 +1,7 @@
 module("Davis.router")
 
-var mockRouter = function () {
-  var router = {};
-  Davis.router.call(router);
-  return router;
-}
-
 test("looking up a route", function () {
-  var router = mockRouter();
+  var router = factory('router')
   router._routeCollection = [];
 
   router.get('/foo')
@@ -21,7 +15,7 @@ test("looking up a route", function () {
 })
 
 test("shortcuts for verbs", function () {
-  var router = mockRouter();
+  var router = factory('router')
 
   router._routeCollection.length = 0;
   router.get('/foo', $.noop);
@@ -36,25 +30,25 @@ test("shortcuts for verbs", function () {
 })
 
 test("keeping a collection of before filters", function () {
-  var router = mockRouter();
+  var router = factory('router')
 
   router.before($.noop)
   equal(router._filterCollection.before.length, 1, "should keep a collection of every before filter")
 })
 
 test("keeping a collection of after filters", function () {
-  var router = mockRouter();
+  var router = factory('router')
 
   router.after($.noop)
   equal(router._filterCollection.after.length, 1, "should keep a collection of every before filter")
 })
 
 test("looking up a before filter with no path condition", function () {
-  var router = mockRouter();
+  var router = factory('router')
   var filters = router.lookupBeforeFilter('get', '/foo')
   var callbackCalled = false;
 
-  equal(filters.length, 0, "should return an empty array if there are no filters")
+  empty(filters, "should return an empty array if there are no filters")
 
   router.before(function () {
     callbackCalled = true;
@@ -71,18 +65,18 @@ test("looking up a before filter with no path condition", function () {
 })
 
 test("looking up a before filter with a path condition", function () {
-  var router = mockRouter();
+  var router = factory('router')
   var filters = router.lookupBeforeFilter('get', '/foo')
   var callbackCalled = false;
 
-  equal(filters.length, 0, "should return an empty array if there are no filters")
+  empty(filters, "should return an empty array if there are no filters")
 
   router.before('/foo', function () {
     callbackCalled = true;
   });
 
   filters = router.lookupBeforeFilter('get', '/bar')
-  equal(filters.length, 0, "should return an empty array if the filter doesn't match")
+  empty(filters, "should return an empty array if the filter doesn't match")
 
   filters = router.lookupBeforeFilter('get', '/foo')
 
@@ -95,7 +89,7 @@ test("looking up a before filter with a path condition", function () {
 })
 
 test("looking up a after filter with no path condition", function () {
-  var router = mockRouter();
+  var router = factory('router')
   var filters = router.lookupAfterFilter('get', '/foo')
   var callbackCalled = false;
 
@@ -116,18 +110,18 @@ test("looking up a after filter with no path condition", function () {
 })
 
 test("looking up a before filter with a path condition", function () {
-  var router = mockRouter();
+  var router = factory('router')
   var filters = router.lookupAfterFilter('get', '/foo')
   var callbackCalled = false;
 
-  equal(filters.length, 0, "should return an empty array if there are no filters")
+  empty(filters, "should return an empty array if there are no filters")
 
   router.after('/foo', function () {
     callbackCalled = true;
   });
 
   filters = router.lookupAfterFilter('get', '/bar')
-  equal(filters.length, 0, "should return an empty array if the filter doesn't match")
+  empty(filters, "should return an empty array if the filter doesn't match")
 
   filters = router.lookupAfterFilter('get', '/foo')
 
@@ -140,7 +134,7 @@ test("looking up a before filter with a path condition", function () {
 })
 
 test("registering a state", function () {
-  var router = mockRouter()
+  var router = factory('router')
 
   router._routeCollection = []
 
@@ -151,7 +145,7 @@ test("registering a state", function () {
 })
 
 test("transitioning to a state", function () {
-  var router = mockRouter(),
+  var router = factory('router'),
       req
 
   Davis.history.onChange(function (r) {
