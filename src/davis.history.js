@@ -18,6 +18,12 @@ Davis.history = (function () {
   var pushStateHandlers = [];
 
   /**
+   * flag to store whether or not this is the first pop state event received
+   * @private
+   */
+  var firstPop = true;
+
+  /**
    * Add a handler to the push state event.  This event is not a native event but is fired
    * every time a call to pushState is called.
    * 
@@ -55,8 +61,9 @@ Davis.history = (function () {
         obj.__proto__ = Davis.Request.prototype
         handler(obj)
       } else {
-        handler(Davis.Request.forPageLoad())
+        if (!firstPop) handler(Davis.Request.forPageLoad())
       };
+      firstPop = false
     }
   }
 
@@ -105,7 +112,7 @@ Davis.history = (function () {
    * and a path property will also be accepted.
    */
   var replaceState = function (request) {
-    history.replaceState(request, request.title, request.historyPath);
+    history.replaceState(request, request.title, request.location());
     pushStateHandlers.forEach(function (handler) {
       handler(request);
     });

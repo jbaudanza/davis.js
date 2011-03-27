@@ -211,6 +211,10 @@ errors will be thrown so that the request will not be handled by JavaScript, the
 to provide a response.  When set to false errors in a route will be caught and the server will not
 receive the request.</p>
 
+<p>`generateRequestOnPageLoad determines whether a request should be generated for the initial page load.
+by default this is set to true so that a Davis.Request will be generated with the path of the current
+page.  Setting this to false will prevent a request being passed to your app for the inital page load.</p>
+
 <ul><li><strong>se</strong>: <em>e</em>
 #configure
  </li></ul>
@@ -220,7 +224,8 @@ receive the request.</p>
       <span class="variable">linkSelector</span>: <span class="string">'a'</span>,
       <span class="variable">formSelector</span>: <span class="string">'form'</span>,
       <span class="variable">logger</span>: <span class="class">Davis</span>.<span class="variable">logger</span>,
-      <span class="variable">throwErrors</span>: <span class="variable">true</span>
+      <span class="variable">throwErrors</span>: <span class="variable">true</span>,
+      <span class="variable">generateRequestOnPageLoad</span>: <span class="variable">true</span>
     },</code></pre>
 </td>
 </tr>
@@ -303,7 +308,7 @@ routes and filters.
       <span class="this">this</span>.<span class="variable">trigger</span>(<span class="string">'start'</span>)
       <span class="this">this</span>.<span class="variable">running</span> = <span class="variable">true</span>;
 
-      <span class="variable">handleRequest</span>(<span class="class">Davis</span>.<span class="class">Request</span>.<span class="variable">forPageLoad</span>())
+      <span class="keyword">if</span> (<span class="this">this</span>.<span class="variable">settings</span>.<span class="variable">generateRequestOnPageLoad</span>) <span class="variable">handleRequest</span>(<span class="class">Davis</span>.<span class="class">Request</span>.<span class="variable">forPageLoad</span>())
 
     },</code></pre>
 </td>
@@ -489,7 +494,7 @@ and a path property will also be accepted.
 </td>
 <td class="code">
 <pre><code><span class="keyword">var</span> <span class="variable">replaceState</span> = <span class="keyword">function</span> (<span class="variable">request</span>) {
-    <span class="variable">history</span>.<span class="variable">replaceState</span>(<span class="variable">request</span>, <span class="variable">request</span>.<span class="variable">title</span>, <span class="variable">request</span>.<span class="variable">historyPath</span>);
+    <span class="variable">history</span>.<span class="variable">replaceState</span>(<span class="variable">request</span>, <span class="variable">request</span>.<span class="variable">title</span>, <span class="variable">request</span>.<span class="variable">location</span>());
     <span class="variable">pushStateHandlers</span>.<span class="variable">forEach</span>(<span class="keyword">function</span> (<span class="variable">handler</span>) {
       <span class="variable">handler</span>(<span class="variable">request</span>);
     });
@@ -497,12 +502,13 @@ and a path property will also be accepted.
 </td>
 </tr><tr class="filename"><td><h2 id="src/davis.listener.js"><a href="#">davis.listener</a></h2></td><td>src/davis.listener.js</td></tr><tr class="code">
 <td class="docs">
-<p>A module to bind to link clicks and form submits, and to turn what would normally be http requests
+
+<p>A module to bind to link clicks and form submits and turn what would normally be http requests
 into instances of Davis.Request.  These request objects are then pushed onto the history stack
 using the Davis.history module.</p>
 
 <p>This module requires jQuery for its event binding and event object normalization.  To use Davis
-with any JavaScript framework, this module should be replaced with one using your framework
+with any, or no, JavaScript framework this module should be replaced with one using your framework
 of choice.
  </p>
 </td>
@@ -640,7 +646,6 @@ to set the correct reqeust method.</p>
   <span class="this">this</span>.<span class="variable">params</span> = {};
   <span class="this">this</span>.<span class="variable">title</span> = <span class="variable">raw</span>.<span class="variable">title</span>;
   <span class="this">this</span>.<span class="variable">queryString</span> = <span class="variable">raw</span>.<span class="variable">fullPath</span>.<span class="variable">split</span>(&<span class="variable">quot</span>;?&<span class="variable">quot</span>;)[<span class="number integer">1</span>];
-  <span class="this">this</span>.<span class="variable">type</span> = <span class="string">'request'</span>;
   <span class="this">this</span>.<span class="variable">_staleCallback</span> = <span class="keyword">function</span> () {};
 
   <span class="keyword">if</span> (<span class="this">this</span>.<span class="variable">queryString</span>) {
