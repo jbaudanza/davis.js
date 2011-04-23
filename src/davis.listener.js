@@ -23,7 +23,7 @@ Davis.listener = (function () {
    */
   var handler = function (targetExtractor) {
     return function (event) {
-      var request = new Davis.Request (targetExtractor.call($(event.target)));
+      var request = new Davis.Request (targetExtractor.call(jQuery(this)));
       Davis.history.pushState(request);
       return false;
     };
@@ -34,10 +34,14 @@ Davis.listener = (function () {
    * @private
    */
   var clickHandler = handler(function () {
+    var self = this
     return {
       method: 'get',
       fullPath: this.attr('href'),
-      title: this.attr('title')
+      title: this.attr('title'),
+      delegateToServer: function () {
+        window.location.pathname = self.attr('href')
+      }
     };
   });
 
@@ -52,10 +56,15 @@ Davis.listener = (function () {
       }).join('&')
     }
 
+    var self = this
+
     return {
       method: this.attr('method'),
       fullPath: [this.attr('action'), extractFormParams(this)].join("?"),
-      title: this.attr('title')
+      title: this.attr('title'),
+      delegateToServer: function () {
+        self.submit()
+      }
     };
   });
 
@@ -67,8 +76,8 @@ Davis.listener = (function () {
    * @see Davis.App.settings
    */
   var listen = function () {
-    $(document).delegate(this.settings.formSelector, 'submit', submitHandler)
-    $(document).delegate(this.settings.linkSelector, 'click', clickHandler)
+    jQuery(document).delegate(this.settings.formSelector, 'submit', submitHandler)
+    jQuery(document).delegate(this.settings.linkSelector, 'click', clickHandler)
   }
 
   /**
@@ -80,8 +89,8 @@ Davis.listener = (function () {
    * @see Davis.App.settings
    */
   var unlisten = function () {
-    $(document).undelegate(this.settings.linkSelector, 'click', clickHandler)
-    $(document).undelegate(this.settings.formSelector, 'submit', submitHandler)
+    jQuery(document).undelegate(this.settings.linkSelector, 'click', clickHandler)
+    jQuery(document).undelegate(this.settings.formSelector, 'submit', submitHandler)
   }
 
   /**

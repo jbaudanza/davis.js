@@ -24,13 +24,14 @@ Davis.App = (function () {
   var App = function () {
     this.id = [new Date().valueOf(), appCounter++].join("-");
     this.running = false;
+    this.boundToInternalEvents = false;
   };
 
   /**
    * creating the prototype for the app from modules listener and event
    * @private
    */
-  App.prototype = $.extend({
+  App.prototype = jQuery.extend({
 
     /**
      * ## app.configure
@@ -62,7 +63,7 @@ Davis.App = (function () {
      *
      */
     use: function (plugin) {
-      plugin.apply(this, Array.prototype.slice.call(arguments, 1))
+      plugin.apply(this, Davis.toArray(arguments, 1))
     },
 
     /**
@@ -95,7 +96,11 @@ Davis.App = (function () {
      * to provide a response.  When set to false errors in a route will be caught and the server will not
      * receive the request.
      *
-     * `generateRequestOnPageLoad determines whether a request should be generated for the initial page load.
+     * `handleRouteNotFound` determines whether or not Davis should handle requests when there is no matching
+     * route.  If set to false Davis will allow the request to be passed to your server to handle if no matching
+     * route can be found.
+     *
+     * `generateRequestOnPageLoad` determines whether a request should be generated for the initial page load.
      * by default this is set to true so that a Davis.Request will be generated with the path of the current
      * page.  Setting this to false will prevent a request being passed to your app for the inital page load.
      *
@@ -106,6 +111,7 @@ Davis.App = (function () {
       formSelector: 'form',
       logger: Davis.logger,
       throwErrors: true,
+      handleRouteNotFound: false,
       generateRequestOnPageLoad: true
     },
 
@@ -151,8 +157,6 @@ Davis.App = (function () {
               self.trigger('routeComplete', request, route)
             } catch (error) {
               self.trigger('routeError', request, route, error)
-              self.settings.logger.error(error.message, error.stack)
-              if (self.settings.throwErrors) throw(error)
             }
 
             self.lookupAfterFilter(request.method, request.path)
@@ -165,20 +169,34 @@ Davis.App = (function () {
         }
       }
 
-      Davis.history.onChange(function (req) {
-        handleRequest(req)
-      });
+      var bindToInternalEvents = function () {
+        self
+          .bind('runRoute', function (request) {
+            self.settings.logger.info("runRoute: " + request.toString());
+          })
+          .bind('routeNotFound', function (request) {
+            if (!self.settings.handleRouteNotFound) {
+              self.stop()
+              request.delegateToServer()
+            };
+            self.settings.logger.warn("routeNotFound: " + request.toString());
+          })
+          .bind('start', function () {
+            self.settings.logger.info("application started")
+          })
+          .bind('routeError', function (request, route, error) {
+            if (self.settings.throwErrors) throw(error)
+            self.settings.logger.error(error.message, error.stack)
+          });
 
-      this
-        .bind('runRoute', function (request) {
-          self.settings.logger.info("runRoute: " + request.toString());
-        })
-        .bind('routeNotFound', function (request) {
-          self.settings.logger.warn("routeNotFound: " + request.toString());
-        })
-        .bind('start', function () {
-          self.settings.logger.info("application started")
+        Davis.history.onChange(function (req) {
+          handleRequest(req)
         });
+
+        self.boundToInternalEvents = true
+      }
+
+      if (!this.boundToInternalEvents) bindToInternalEvents()
 
       this.listen();
       this.trigger('start')
