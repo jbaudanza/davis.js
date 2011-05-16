@@ -128,9 +128,11 @@ Davis.App = (function () {
     start: function () {
       var self = this;
 
-      if (!Davis.supported()) {
-        this.trigger('unsupported')
-        return
+      if(this.settings.useHashHistory === undefined)
+        this.settings.useHashHistory = !Davis.supported();
+
+      if (this.settings.useHashHistory) {
+        Davis.history = Davis.hash_history;
       };
 
       var runFilterWith = function (request) {
