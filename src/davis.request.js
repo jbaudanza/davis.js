@@ -34,7 +34,7 @@ Davis.Request = function (raw) {
   this._staleCallback = function () {};
 
   if (this.queryString) {
-    this.queryString.split("&").forEach(function (keyval) {
+    Davis.utils.forEach(this.queryString.split("&"), function (keyval) {
       var paramName = keyval.split("=")[0],
           paramValue = keyval.split("=")[1],
           nestedParamRegex = /^(\w+)\[(\w+)\]/,
@@ -56,6 +56,7 @@ Davis.Request = function (raw) {
   this.method = (this.params._method || raw.method).toLowerCase();
   this.path = raw.fullPath.replace(/\?.+$/, "");
   this.delegateToServer = raw.delegateToServer || Davis.noop;
+  this.isForPageLoad = raw.forPageLoad || false;
 
   if (Davis.Request.prev) Davis.Request.prev.makeStale(this);
   Davis.Request.prev = this;
@@ -163,7 +164,8 @@ Davis.Request.forPageLoad = function () {
   return new this ({
     method: 'get',
     fullPath: window.location.pathname,
-    title: document.title
+    title: document.title,
+    forPageLoad: true
   });
 }
 
