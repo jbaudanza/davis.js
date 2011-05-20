@@ -160,9 +160,13 @@ Davis.Request.prototype.toString = function () {
  * @returns {Davis.Request} A request representing the current page loading.
  */
 Davis.Request.forPageLoad = function () {
+  var location = Davis.hash_history.parseLocationHash();
+  if(!location)
+    location = window.location.pathname;
+
   return new this ({
     method: 'get',
-    fullPath: window.location.pathname,
+    fullPath: location,
     title: document.title,
     forPageLoad: true
   });
