@@ -27,7 +27,7 @@ Davis.hash_history = (function() {
   };
 
   var pushState = function(request) {
-    document.location.href = "#" + request.location();
+    document.location.href = "#!" + request.location();
     invokeCallback('push', request);
   };
 
@@ -35,7 +35,7 @@ Davis.hash_history = (function() {
     if(string == undefined)
       string = window.location.toString();
 
-    var match = string.match(/#(.*)$/);
+    var match = string.match(/#!(.*)$/);
     if(match)
       return match[1];
   };
