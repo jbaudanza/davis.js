@@ -3,7 +3,21 @@ Davis.hash_history = (function() {
     push: [], pop: []
   };
 
+  var hasBeenInitialized = false;
+
+  var initialize = function() {
+    if("onhashchange" in window) {
+      $(window).bind('hashchange', checkForLocationChange);
+    } else {
+      setTimeout(locationPoller, pollerInterval);
+    }
+    hasBeenInitialized = true;
+  };
+
   var addCallback = function(type, handler) {
+    if(!hasBeenInitialized)
+      initialize();
+
     callbacks[type].push(handler);
   };
 
@@ -24,11 +38,6 @@ Davis.hash_history = (function() {
   var onChange = function(handler) {
     onPushState(handler);
     onPopState(handler);
-  };
-
-  var pushState = function(request) {
-    document.location.href = "#!" + request.location();
-    invokeCallback('push', request);
   };
 
   var parseLocationHash = function(string) {
@@ -59,20 +68,23 @@ Davis.hash_history = (function() {
     return window.location.toString();
   };
   var lastPolledLocation = getLocation();
-
-  var locationPoller = function() {
+  var checkForLocationChange = function() {
     if(lastPolledLocation != getLocation()) {
       lastPolledLocation = getLocation();
       onHashChange();
     }
+  };
+
+  var locationPoller = function() {
+    checkForLocationChange();
     setTimeout(locationPoller, pollerInterval);
   };
 
-  if("onhashchange" in window) {
-    $(window).bind('hashchange', onHashChange);
-  } else {
-    setTimeout(locationPoller, pollerInterval);
-  }
+  var pushState = function(request) {
+    document.location.href = "#!" + request.location();
+    lastPolledLocation = getLocation();
+    invokeCallback('push', request);
+  };
 
   return {
     replaceState: function() {}, // Not supported
