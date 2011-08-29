@@ -44,6 +44,8 @@ Davis.hash_history = (function() {
     var match = document.location.hash.match(/#!(.*)$/);
     if(match)
       return match[1];
+    else
+      return '';
   };
 
   var onHashChange = function() {
