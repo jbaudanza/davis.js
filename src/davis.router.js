@@ -142,7 +142,7 @@ Davis.router = function () {
    */
   this.trans = function (path, data) {
     if (data) {
-      var fullPath = [path, decodeURIComponent($.param(data))].join('?')
+      var fullPath = [path, decodeURIComponent(jQuery.param(data))].join('?')
     } else {
       var fullPath = path
     };
@@ -153,7 +153,7 @@ Davis.router = function () {
       title: ''
     })
 
-    Davis.history.pushState(req)
+    Davis.location.assign(req)
   }
 
   /**

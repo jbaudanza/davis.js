@@ -28,6 +28,7 @@
  */
 Davis.Request = function (raw) {
   var self = this;
+  this.raw = raw;
   this.params = {};
   this.title = raw.title;
   this.queryString = raw.fullPath.split("?")[1];
@@ -84,7 +85,7 @@ Davis.Request = function (raw) {
  *     })
  */
 Davis.Request.prototype.redirect = function (path) {
-  Davis.history.replaceState(new Davis.Request ({
+  Davis.location.replace(new Davis.Request ({
     method: 'get',
     fullPath: path,
     title: this.title
@@ -151,6 +152,21 @@ Davis.Request.prototype.toString = function () {
 };
 
 /**
+ * ## request.asJSON
+ * Converts the request to a plain object which can be converted to a JSON string.  Used when
+ * pushing a request onto the history stack.
+ *
+ * @returns {Object} a plain object representation of the request.
+ */
+Davis.Request.prototype.asJSON = function () {
+  return {
+    title: this.raw.title,
+    fullPath: this.raw.fullPath,
+    method: this.raw.method
+  }
+}
+
+/**
  * ## Davis.Request.forPageLoad
  * Creates a new request for the page on page load.
  * This is required because usually requests are generated from clicking links or submitting forms
@@ -166,6 +182,8 @@ Davis.Request.forPageLoad = function () {
 
   return new this ({
     method: 'get',
+    // Commenting out original call in master branch
+    // fullPath: Davis.location.current(),
     fullPath: location,
     title: document.title,
     forPageLoad: true

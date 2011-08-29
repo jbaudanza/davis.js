@@ -40,6 +40,7 @@ class Bundler
           davis.router.js
           davis.history.js
           davis.hash_history.js
+          davis.location.js
           davis.request.js
           davis.app.js
         )
