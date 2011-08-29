@@ -40,17 +40,14 @@ Davis.hash_history = (function() {
     onPopState(handler);
   };
 
-  var parseLocationHash = function(string) {
-    if(string == undefined)
-      string = window.location.toString();
-
-    var match = string.match(/#!(.*)$/);
+  var current = function() {
+    var match = document.location.hash.match(/#!(.*)$/);
     if(match)
       return match[1];
   };
 
   var onHashChange = function() {
-    var path = parseLocationHash();
+    var path = current();
 
     if(path) {
       invokeCallback('pop', new Davis.Request({
@@ -80,16 +77,16 @@ Davis.hash_history = (function() {
     setTimeout(locationPoller, pollerInterval);
   };
 
-  var pushState = function(request) {
+  var assign = function(request) {
     document.location.href = "#!" + request.location();
     lastPolledLocation = getLocation();
     invokeCallback('push', request);
   };
 
   return {
-    replaceState: function() {}, // Not supported
-    pushState: pushState,
-    onChange: onChange,
-    parseLocationHash: parseLocationHash
+    replace: function() {}, // Not supported
+    assign: assign,
+    current: current,
+    onChange: onChange
   };
 })();

@@ -132,7 +132,7 @@ Davis.App = (function () {
         this.settings.useHashHistory = !Davis.supported();
 
       if (this.settings.useHashHistory) {
-        Davis.history = Davis.hash_history;
+        Davis.location.setLocationDelegate(Davis.hash_history);
       };
 
       var runFilterWith = function (request) {

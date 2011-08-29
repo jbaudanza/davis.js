@@ -176,15 +176,9 @@ Davis.Request.prototype.asJSON = function () {
  * @returns {Davis.Request} A request representing the current page loading.
  */
 Davis.Request.forPageLoad = function () {
-  var location = Davis.hash_history.parseLocationHash();
-  if(!location)
-    location = window.location.pathname;
-
   return new this ({
     method: 'get',
-    // Commenting out original call in master branch
-    // fullPath: Davis.location.current(),
-    fullPath: location,
+    fullPath: Davis.location.current(),
     title: document.title,
     forPageLoad: true
   });
