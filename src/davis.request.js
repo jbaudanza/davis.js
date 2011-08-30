@@ -178,6 +178,7 @@ Davis.Request.prototype.asJSON = function () {
 Davis.Request.forPageLoad = function () {
   return new this ({
     method: 'get',
+    // fullPath: window.location.pathname,
     fullPath: Davis.location.current(),
     title: document.title,
     forPageLoad: true

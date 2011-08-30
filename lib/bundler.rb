@@ -12,15 +12,18 @@ class Bundler
     def bundle!
       FileUtils.mkdir_p(DIST_DIR)
 
-      write "#{DIST_DIR}/jbaudanza-davis-#{version}.js" do
+      write "#{DIST_DIR}/davis-#{version}.js" do
         Fewer::Engines::Js.new(SRC_DIR, files).read
       end
 
-      write "#{DIST_DIR}/jbaudanza-davis-#{version}.min.js" do
+      write "#{DIST_DIR}/davis-#{version}.min.js" do
         Fewer::Engines::Js.new(SRC_DIR, files, :min => true).read
       end
 
-      FileUtils.cp "#{DIST_DIR}/jbaudanza-davis-#{version}.js",
+      FileUtils.cp "#{DIST_DIR}/davis-#{version}.js",
+        "/Users/jon/work/music/public/javascripts/lib"
+
+      FileUtils.cp "#{SRC_DIR}/extensions/davis.hashRouting.js",
         "/Users/jon/work/music/public/javascripts/lib"
     end
 
@@ -39,7 +42,6 @@ class Bundler
           davis.route.js
           davis.router.js
           davis.history.js
-          davis.hash_history.js
           davis.location.js
           davis.request.js
           davis.app.js
