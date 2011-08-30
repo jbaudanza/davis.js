@@ -74,7 +74,7 @@ test("normalizing the initial value of window.location", function() {
     var mockLocation = {
       pathname: pathname,
       hash: hash,
-      assign: createSpy()
+      replace: createSpy()
     };
 
     var extension = Davis.hashRouting({
@@ -84,8 +84,8 @@ test("normalizing the initial value of window.location", function() {
 
     extension(Davis);
 
-    if(mockLocation.assign.mostRecentCall)
-      return mockLocation.assign.mostRecentCall.args[0];
+    if(mockLocation.replace.mostRecentCall)
+      return mockLocation.replace.mostRecentCall.args[0];
     else
       return null;
   }

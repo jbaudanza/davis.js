@@ -228,7 +228,7 @@ Davis.hashRouting = function(options) {
     if(options.normalizeInitialLocation) {
       normalizedLocation = normalize(usingHashRouting, current(), options.location.pathname);
       if(normalizedLocation) {
-        options.location.assign(normalizedLocation);
+        options.location.replace(normalizedLocation);
       }
     }
 
